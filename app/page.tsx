@@ -57,16 +57,15 @@ export default function Home() {
   return (
     <div className="wrap">
       <div className="hero">
-        <svg className="contours" viewBox="0 0 300 300">
-          <g fill="none" stroke="#C79A54" strokeWidth="1">
-            <ellipse cx="150" cy="150" rx="30" ry="22" opacity=".9" />
-            <ellipse cx="150" cy="150" rx="60" ry="46" opacity=".7" />
-            <ellipse cx="150" cy="150" rx="92" ry="72" opacity=".5" />
-            <ellipse cx="150" cy="150" rx="126" ry="100" opacity=".35" />
-            <ellipse cx="150" cy="150" rx="160" ry="130" opacity=".2" />
-          </g>
-        </svg>
-        <p className="wordmark">Pathlyst</p>
+        <p className="wordmark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M3 20L9 8L13 15L17 6L21 20" stroke="#E8542E" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
+            <circle cx="9" cy="8" r="1.4" fill="#E8542E" />
+            <circle cx="17" cy="6" r="1.4" fill="#E8542E" />
+
+          </svg>
+          Pathlyst
+        </p>
         <h1>Turn your course into a career map.</h1>
         <p className="lede">Paste a syllabus. See which career paths it actually builds toward — and what's missing to get there.</p>
       </div>
@@ -96,19 +95,21 @@ export default function Home() {
           </div>
 
           <h2>Career paths this maps to</h2>
-          {roles.map((r) => (
-            <div className="role-card" key={r.role}>
-              <div className="role-head">
-                <span className="role-name">{r.role}</span>
-                <span className="role-score">{r.pct}%</span>
+          <div className="route">
+            {roles.map((r, i) => (
+              <div className="role-card" data-index={i + 1} key={r.role}>
+                <div className="role-head">
+                  <span className="role-name">{r.role}</span>
+                  <span className="role-score">{r.pct}%</span>
+                </div>
+                <div className="bar"><div className="bar-fill" style={{ width: `${r.pct}%` }} /></div>
+                <p className="matched"><span className="label">Covered</span>{r.matched.join(", ")}</p>
+                {r.gap.length > 0 && (
+                  <p className="gap"><span className="label">To strengthen</span>{r.gap.join(", ")}</p>
+                )}
               </div>
-              <div className="bar"><div className="bar-fill" style={{ width: `${r.pct}%` }} /></div>
-              <p className="matched"><span className="label">Covered</span>{r.matched.join(", ")}</p>
-              {r.gap.length > 0 && (
-                <p className="gap"><span className="label">To strengthen</span>{r.gap.join(", ")}</p>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </section>
       )}
 
