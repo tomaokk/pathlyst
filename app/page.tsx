@@ -1,69 +1,118 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import { ROLE_MAP } from "@/lib/roleMap";
+
+const EXAMPLE = `CSC 3350 — Applied Data Systems
+Topics: relational databases and SQL querying, Python for data cleaning and analysis, descriptive and inferential statistics, building dashboards for data visualization, and a final group project presenting findings to a non-technical audience (written report + oral presentation). Midterm covers Excel-based forecasting exercises.`;
+
+type RoleResult = { role: string; matched: string[]; gap: string[]; pct: number };
 
 export default function Home() {
+  const [syllabus, setSyllabus] = useState("");
+  const [skills, setSkills] = useState<string[]>([]);
+  const [roles, setRoles] = useState<RoleResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleMap() {
+    if (!syllabus.trim()) {
+      setError("Paste a syllabus first.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/extract", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ syllabus }),
+      });
+      const data = await res.json();
+      if (!data.skills || !data.skills.length) {
+        setError("Couldn't find clear skills in that text — try adding more detail.");
+        setLoading(false);
+        return;
+      }
+      setSkills(data.skills);
+      setRoles(scoreRoles(data.skills));
+    } catch (e) {
+      setError("Something went wrong reading that syllabus. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function scoreRoles(found: string[]): RoleResult[] {
+    return Object.entries(ROLE_MAP)
+      .map(([role, roleSkills]) => {
+        const matched = roleSkills.filter((s) => found.includes(s));
+        const gap = roleSkills.filter((s) => !found.includes(s));
+        return { role, matched, gap, pct: Math.round((matched.length / roleSkills.length) * 100) };
+      })
+      .filter((r) => r.matched.length > 0)
+      .sort((a, b) => b.pct - a.pct || b.matched.length - a.matched.length)
+      .slice(0, 4);
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="wrap">
+      <div className="hero">
+        <svg className="contours" viewBox="0 0 300 300">
+          <g fill="none" stroke="#C79A54" strokeWidth="1">
+            <ellipse cx="150" cy="150" rx="30" ry="22" opacity=".9" />
+            <ellipse cx="150" cy="150" rx="60" ry="46" opacity=".7" />
+            <ellipse cx="150" cy="150" rx="92" ry="72" opacity=".5" />
+            <ellipse cx="150" cy="150" rx="126" ry="100" opacity=".35" />
+            <ellipse cx="150" cy="150" rx="160" ry="130" opacity=".2" />
+          </g>
+        </svg>
+        <p className="wordmark">Pathlyst</p>
+        <h1>Turn your course into a career map.</h1>
+        <p className="lede">Paste a syllabus. See which career paths it actually builds toward — and what's missing to get there.</p>
+      </div>
+
+      <div className="input-area">
+        <label htmlFor="syllabus">Course syllabus or description</label>
+        <textarea
+          id="syllabus"
+          placeholder="Paste your syllabus, topic list, or a summary of what the course covers..."
+          value={syllabus}
+          onChange={(e) => setSyllabus(e.target.value)}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        <div className="row">
+          <button className="primary" onClick={handleMap} disabled={loading}>
+            {loading ? "Reading…" : "Map my skills"}
+          </button>
+          <button className="link-btn" onClick={() => setSyllabus(EXAMPLE)}>Try an example</button>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        {error && <div className="status err">{error}</div>}
+      </div>
+
+      {roles.length > 0 && (
+        <section className="results show">
+          <h2>Skills found</h2>
+          <div className="chips">
+            {skills.map((s) => <span className="chip" key={s}>{s}</span>)}
+          </div>
+
+          <h2>Career paths this maps to</h2>
+          {roles.map((r) => (
+            <div className="role-card" key={r.role}>
+              <div className="role-head">
+                <span className="role-name">{r.role}</span>
+                <span className="role-score">{r.pct}%</span>
+              </div>
+              <div className="bar"><div className="bar-fill" style={{ width: `${r.pct}%` }} /></div>
+              <p className="matched"><span className="label">Covered</span>{r.matched.join(", ")}</p>
+              {r.gap.length > 0 && (
+                <p className="gap"><span className="label">To strengthen</span>{r.gap.join(", ")}</p>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      <footer>Skill extraction runs live against your pasted text — nothing is stored.</footer>
     </div>
   );
 }
