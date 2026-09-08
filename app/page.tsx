@@ -57,13 +57,15 @@ export default function Home() {
   return (
     <div className="wrap">
       <div className="hero">
-        <p className="wordmark">
+        <div className="wordmark">
           <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
             <circle cx="13" cy="13" r="12" stroke="#E8542E" strokeWidth="1.6" />
             <path d="M9 8V18M9 8H14.5C16.4 8 18 9.5 18 11.3C18 13.1 16.4 14.6 14.5 14.6H9" stroke="#E8542E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          Pathlyst<span className="wordmark-ai">.AI</span>
-        </p>
+          <span>
+            <span className="wordmark-text">Pathlyst</span><span className="wordmark-ai">.ai</span>
+          </span>
+        </div>
         <h1>Turn your course into a career map.</h1>
         <p className="lede">Paste a syllabus. See which career paths it actually builds toward — and what's missing to get there.</p>
       </div>
