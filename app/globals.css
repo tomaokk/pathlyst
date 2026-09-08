@@ -12,9 +12,10 @@
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 .wrap { max-width: 600px; margin: 0 auto; padding: 0 24px 70px; }
 .hero { position: relative; padding: 56px 0 40px; }
-.wordmark { display: flex; align-items: center; gap: 10px; font-family: Georgia, serif; font-weight: 700; font-size: 27px; margin: 0 0 30px; color: var(--ink); }
+.wordmark { display: flex; align-items: center; gap: 10px; font-family: "Palatino", "Palatino Linotype", Georgia, serif; font-weight: 700; font-size: 27px; letter-spacing: -.01em; margin: 0 0 30px; color: var(--ink); }
 .wordmark svg { flex-shrink: 0; }
-h1 { font-family: Georgia, serif; font-weight: 700; font-size: 42px; line-height: 1.1; margin: 0 0 16px; max-width: 11ch; letter-spacing: -.01em; color: var(--ink); }
+.wordmark-ai { color: var(--coral); font-size: 18px; font-weight: 600; }
+h1 { font-family: "Palatino", "Palatino Linotype", Georgia, serif; font-weight: 700; font-size: 42px; line-height: 1.1; margin: 0 0 16px; max-width: 11ch; letter-spacing: -.015em; color: var(--ink); }
 .lede { font-size: 17px; line-height: 1.6; max-width: 36ch; color: var(--text-dim); margin: 0; }
 .input-area { margin-top: 44px; }
 label { display: block; font-size: 13px; letter-spacing: .02em; color: var(--text-dim); margin-bottom: 10px; font-weight: 600; }
@@ -30,7 +31,7 @@ button { font-weight: 700; font-size: 14px; cursor: pointer; }
 .status { font-size: 13.5px; color: var(--teal); min-height: 18px; margin-top: 14px; font-weight: 600; }
 .status.err { color: var(--coral-deep); }
 section.results { margin-top: 60px; }
-h2 { font-family: Georgia, serif; font-size: 21px; font-weight: 700; margin: 0 0 18px; color: var(--ink); }
+h2 { font-family: "Palatino", "Palatino Linotype", Georgia, serif; font-size: 21px; font-weight: 700; margin: 0 0 18px; color: var(--ink); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
 .chip { background: #EAF4F0; border: 1px solid #BFDDD2; color: var(--teal); font-size: 13px; font-weight: 600; padding: 6px 13px; border-radius: 100px; }
 .route { position: relative; padding-left: 34px; }
@@ -45,14 +46,14 @@ h2 { font-family: Georgia, serif; font-size: 21px; font-weight: 700; margin: 0 0
   background: var(--coral);
   border-radius: 50%;
   color: #FFF9F0;
-  font-family: Georgia, serif;
+  font-family: "Palatino", Georgia, serif;
   font-size: 12px;
   font-weight: 700;
   display: flex; align-items: center; justify-content: center;
 }
 .role-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.role-name { font-family: Georgia, serif; font-size: 19px; font-weight: 700; color: var(--ink); }
-.role-score { font-family: Georgia, serif; font-size: 25px; font-weight: 700; color: var(--coral); }
+.role-name { font-family: "Palatino", "Palatino Linotype", Georgia, serif; font-size: 19px; font-weight: 700; color: var(--ink); }
+.role-score { font-family: "Palatino", "Palatino Linotype", Georgia, serif; font-size: 25px; font-weight: 700; color: var(--coral); }
 .bar { height: 5px; background: #EFE9D8; border-radius: 3px; overflow: hidden; margin: 12px 0 14px; }
 .bar-fill { height: 100%; background: var(--teal); border-radius: 3px; }
 .matched, .gap { font-size: 13.5px; line-height: 1.55; margin: 0 0 6px; }
